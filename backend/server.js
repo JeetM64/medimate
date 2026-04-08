@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 
 const connectDB = require("./config/db");
 const drugRoutes = require("./routes/drugRoutes");
-
+const questionRoutes = require("./routes/questionRoutes");
 
 dotenv.config();
 connectDB();
@@ -14,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/drugs", drugRoutes);
+app.use("/api/questions", questionRoutes);
 
 app.get("/", (req, res) => {
     res.send("API Running...");
