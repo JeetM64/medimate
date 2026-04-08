@@ -16,7 +16,23 @@ router.post("/add", async (req, res) => {
 
 router.get("/", async (req, res) => {
     try {
-        const questions = await Question.find();
+        const { topic, limit } = req.query;
+
+        let query = {};
+
+        if (topic) {
+            query.topic = topic;
+        }
+
+        let questions = await Question.find(query);
+
+        // shuffle for randomness
+        questions = questions.sort(() => 0.5 - Math.random());
+
+        if (limit) {
+            questions = questions.slice(0, parseInt(limit));
+        }
+
         res.json(questions);
     } catch (err) {
         res.status(500).json({ error: err.message });
