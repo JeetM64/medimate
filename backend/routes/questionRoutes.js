@@ -41,20 +41,35 @@ router.get("/", async (req, res) => {
 
 
 router.post("/submit", async (req, res) => {
-    const { answers } = req.body; 
-    // answers = [{ questionId, selectedOption }]
+    const { answers } = req.body;
 
     try {
-        let score = 0;
+        let correct = 0;
+        let wrong = 0;
 
         for (let ans of answers) {
             const q = await Question.findById(ans.questionId);
+
+            if (!q) continue;
+
             if (q.correctAnswer === ans.selectedOption) {
-                score++;
+                correct++;
+            } else {
+                wrong++;
             }
         }
 
-        res.json({ score });
+        const total = correct + wrong;
+        const percentage = total > 0 ? (correct / total) * 100 : 0;
+
+        res.json({
+            score: correct,
+            total,
+            correct,
+            wrong,
+            percentage
+        });
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
