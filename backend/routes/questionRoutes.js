@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
             query.topic = topic;
         }
 
-        let questions = await Question.find(query);
+        let questions = await Question.find(query).select("-correctAnswer");
 
         // shuffle for randomness
         questions = questions.sort(() => 0.5 - Math.random());
